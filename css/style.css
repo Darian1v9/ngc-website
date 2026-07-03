@@ -1,0 +1,296 @@
+/* ===================================================
+   NEW GOLF CLUB Neu-Ulm – Stylesheet
+   Markenblau, Light/Dark Mode, Animationen
+   =================================================== */
+
+:root {
+  --brand: #00a3e0;          /* Logo-Blau */
+  --brand-dark: #0079a8;
+  --brand-deep: #063243;     /* Header/Footer Petrol */
+  --accent: #f7a600;         /* Lounge-Orange */
+  --bg: #f3f8fb;
+  --surface: #ffffff;
+  --text: #16232c;
+  --text-muted: #5a6b76;
+  --line: #e2ecf2;
+  --notice-bg: #fff6df;
+  --notice-line: #f0d896;
+  --radius: 14px;
+  --shadow: 0 6px 24px rgba(6, 50, 67, 0.10);
+  --maxw: 1120px;
+  --hero-overlay-1: rgba(6, 50, 67, .82);
+  --hero-overlay-2: rgba(0, 121, 168, .55);
+}
+
+[data-theme="dark"] {
+  --bg: #0b141b;
+  --surface: #12212b;
+  --text: #e7f0f5;
+  --text-muted: #93a8b4;
+  --line: #1e3340;
+  --notice-bg: #2a2413;
+  --notice-line: #57491f;
+  --shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  --hero-overlay-1: rgba(4, 22, 31, .90);
+  --hero-overlay-2: rgba(0, 90, 128, .55);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+  font-size: 17px;
+  transition: background .35s ease, color .35s ease;
+}
+
+img { max-width: 100%; display: block; }
+a { color: var(--brand-dark); text-decoration: none; }
+[data-theme="dark"] a { color: #4dc3ee; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+/* ---------- Header / Navigation ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--brand-deep);
+  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+.nav-wrap {
+  max-width: var(--maxw); margin: 0 auto; padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 70px; gap: 12px;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand:hover { text-decoration: none; }
+.brand img { height: 46px; width: auto; border-radius: 6px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text strong { color: #ffffff; font-size: 1.05rem; letter-spacing: .05em; }
+.brand-text span { color: var(--brand); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; }
+
+.main-nav ul { list-style: none; display: flex; align-items: center; gap: 4px; }
+.main-nav a {
+  color: #dcebf3; padding: 9px 12px; border-radius: 8px;
+  font-size: .93rem; font-weight: 500; display: block;
+}
+.main-nav a:hover { background: rgba(255,255,255,.12); text-decoration: none; }
+.main-nav a.active { background: var(--brand); color: #ffffff; font-weight: 700; }
+.main-nav a.cta-nav { background: var(--accent); color: #2a1d00; font-weight: 700; margin-left: 6px; }
+.main-nav a.cta-nav:hover { background: #ffb824; }
+
+.toggles { display: flex; gap: 8px; align-items: center; }
+.toggle-btn {
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3);
+  color: #ffffff; border-radius: 999px; padding: 7px 13px; font-size: .9rem;
+  cursor: pointer; font-weight: 700; transition: background .2s;
+}
+.toggle-btn:hover { background: rgba(255,255,255,.25); }
+
+.nav-toggle {
+  display: none; background: none; border: 2px solid rgba(255,255,255,.5);
+  color: #ffffff; border-radius: 8px; padding: 7px 12px; font-size: 1.1rem; cursor: pointer;
+}
+
+@media (max-width: 1020px) {
+  .nav-toggle { display: block; }
+  .main-nav { display: none; width: 100%; order: 4; }
+  .main-nav.open { display: block; }
+  .nav-wrap { flex-wrap: wrap; padding: 12px 20px; }
+  .main-nav ul { flex-direction: column; align-items: stretch; gap: 2px; padding: 10px 0; }
+  .main-nav a.cta-nav { margin-left: 0; text-align: center; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative; color: #ffffff; overflow: hidden;
+  background:
+    linear-gradient(150deg, var(--hero-overlay-1) 20%, var(--hero-overlay-2) 100%),
+    url("../images/hero-flag.jpg") center 35% / cover no-repeat,
+    linear-gradient(160deg, #063243 0%, #0079a8 60%, #00a3e0 100%);
+}
+.hero::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 90px;
+  background: var(--bg);
+  clip-path: ellipse(75% 100% at 50% 100%);
+  transition: background .35s ease;
+}
+.hero-inner { max-width: var(--maxw); margin: 0 auto; padding: 100px 20px 160px; will-change: transform; }
+.hero .kicker {
+  display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.3);
+  padding: 6px 16px; border-radius: 999px; font-size: .8rem; letter-spacing: .18em;
+  text-transform: uppercase; margin-bottom: 22px; backdrop-filter: blur(4px);
+}
+.hero h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.12; margin-bottom: 16px; text-shadow: 0 2px 14px rgba(0,0,0,.35); }
+.hero p.lead { font-size: clamp(1.05rem, 2vw, 1.25rem); max-width: 640px; color: #eaf5fa; margin-bottom: 34px; text-shadow: 0 1px 8px rgba(0,0,0,.3); }
+.hero-small .hero-inner { padding: 64px 20px 130px; }
+
+.btn {
+  display: inline-block; padding: 14px 28px; border-radius: 999px;
+  font-weight: 700; font-size: 1rem; transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn:hover { text-decoration: none; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+.btn-gold { background: var(--accent); color: #2a1d00; }
+.btn-ghost { border: 2px solid rgba(255,255,255,.75); color: #ffffff; margin-left: 10px; }
+.btn-blue { background: var(--brand); color: #ffffff; }
+@media (max-width: 560px) { .btn-ghost { margin-left: 0; margin-top: 12px; } }
+
+/* ---------- Scroll-Reveal ---------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .12s; }
+.reveal.d2 { transition-delay: .24s; }
+.reveal.d3 { transition-delay: .36s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------- Sections ---------- */
+section { padding: 64px 0; }
+.section-tight { padding: 40px 0; }
+h2.section-title { font-size: clamp(1.6rem, 3.4vw, 2.2rem); color: var(--brand-dark); margin-bottom: 10px; }
+[data-theme="dark"] h2.section-title { color: #4dc3ee; }
+p.section-sub { color: var(--text-muted); max-width: 680px; margin-bottom: 36px; }
+.center { text-align: center; }
+.center p.section-sub { margin-left: auto; margin-right: auto; }
+
+/* ---------- Cards ---------- */
+.grid { display: grid; gap: 24px; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 900px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 30px; display: flex; flex-direction: column;
+  transition: transform .25s ease, box-shadow .25s ease, background .35s ease;
+}
+.card:hover { transform: translateY(-6px); box-shadow: 0 14px 34px rgba(6,50,67,.16); }
+.card .logo-img { height: 74px; width: auto; margin-bottom: 18px; border-radius: 8px; align-self: flex-start; }
+.card .icon {
+  width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(140deg, var(--brand-dark), var(--brand));
+  color: #fff; font-size: 1.5rem; margin-bottom: 18px;
+}
+.card h3 { color: var(--brand-dark); font-size: 1.25rem; margin-bottom: 10px; }
+[data-theme="dark"] .card h3 { color: #4dc3ee; }
+.card p { color: var(--text-muted); font-size: .98rem; }
+.card .card-link { margin-top: auto; padding-top: 18px; font-weight: 700; }
+
+/* ---------- Status-Leiste ---------- */
+.status-bar { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 26px 30px; transition: background .35s ease; }
+.status-bar h3 { color: var(--brand-dark); margin-bottom: 14px; }
+[data-theme="dark"] .status-bar h3 { color: #4dc3ee; }
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.status-item { background: var(--bg); border-radius: 10px; padding: 14px 16px; border: 1px solid var(--line); }
+.status-item .label { font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
+.status-item .value { font-weight: 700; color: var(--brand-dark); }
+[data-theme="dark"] .status-item .value { color: #4dc3ee; }
+
+/* ---------- Tabellen ---------- */
+.table-wrap { overflow-x: auto; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; min-width: 480px; }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+th { background: var(--brand-deep); color: #fff; font-size: .9rem; letter-spacing: .04em; }
+tr:last-child td { border-bottom: none; }
+td strong { color: var(--brand-dark); }
+[data-theme="dark"] td strong { color: #4dc3ee; }
+
+/* ---------- Preis-Boxen ---------- */
+.price-box { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; text-align: center; transition: transform .25s ease, background .35s ease; }
+.price-box:hover { transform: translateY(-6px); }
+.price-box .price { font-size: 2rem; font-weight: 800; color: var(--brand-dark); }
+[data-theme="dark"] .price-box .price { color: #4dc3ee; }
+.price-box .per { color: var(--text-muted); font-size: .9rem; }
+.price-box h3 { color: var(--brand); margin-bottom: 8px; }
+
+/* ---------- Split / Infobox ---------- */
+.split { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: start; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+.infobox { background: var(--brand-deep); color: #dcebf3; border-radius: var(--radius); padding: 28px; }
+.infobox h3 { color: var(--accent); margin-bottom: 14px; }
+.infobox dt { font-size: .78rem; text-transform: uppercase; letter-spacing: .1em; color: #8fb6c8; margin-top: 14px; }
+.infobox dd { font-weight: 600; }
+.infobox a { color: var(--accent); }
+
+/* ---------- Platzübersicht ---------- */
+.course-map {
+  background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 18px; transition: background .35s ease;
+}
+.course-map img { width: 100%; border-radius: 10px; }
+
+/* ---------- Karte / Hinweis ---------- */
+.map-embed { border: 0; width: 100%; height: 420px; border-radius: var(--radius); box-shadow: var(--shadow); }
+.notice { background: var(--notice-bg); border: 1px solid var(--notice-line); border-radius: 10px; padding: 14px 18px; font-size: .95rem; margin: 20px 0; }
+
+/* ---------- CTA-Band ---------- */
+.cta-band {
+  background: linear-gradient(140deg, var(--brand-deep), var(--brand-dark));
+  color: #fff; border-radius: var(--radius); padding: 46px 40px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;
+}
+.cta-band h2 { font-size: 1.6rem; }
+.cta-band p { color: #c5dde9; }
+
+/* ---------- Footer ---------- */
+.site-footer { background: var(--brand-deep); color: #b9d2de; margin-top: 60px; }
+.footer-grid {
+  max-width: var(--maxw); margin: 0 auto; padding: 54px 20px 30px;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+}
+@media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr; } }
+.site-footer h4 { color: #fff; margin-bottom: 14px; font-size: 1rem; letter-spacing: .06em; text-transform: uppercase; }
+.site-footer a { color: #b9d2de; }
+.site-footer a:hover { color: var(--accent); }
+.site-footer ul { list-style: none; }
+.site-footer li { margin-bottom: 8px; }
+.footer-logos { display: flex; gap: 12px; margin-top: 16px; }
+.footer-logos img { height: 56px; width: auto; border-radius: 6px; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,.15); text-align: center; padding: 18px 20px; font-size: .85rem; color: #7fa2b2; }
+
+/* ---------- Dark-Mode Kontrast-Fixes ---------- */
+[data-theme="dark"] .main-nav a { color: #dcebf3; }
+[data-theme="dark"] .main-nav a.active { color: #ffffff; }
+[data-theme="dark"] .main-nav a.cta-nav { color: #2a1d00; }
+[data-theme="dark"] .btn-gold { color: #2a1d00; }
+[data-theme="dark"] .btn-blue { color: #ffffff; }
+[data-theme="dark"] .btn-ghost { color: #ffffff; }
+[data-theme="dark"] .infobox a { color: var(--accent); }
+[data-theme="dark"] .site-footer a { color: #b9d2de; }
+[data-theme="dark"] .site-footer a:hover { color: var(--accent); }
+
+/* ---------- Turnierkalender ---------- */
+.filter-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+.chip {
+  border: 2px solid var(--brand); background: transparent; color: var(--brand-dark);
+  border-radius: 999px; padding: 8px 18px; font-weight: 700; cursor: pointer;
+  font-size: .9rem; transition: background .2s, color .2s;
+}
+[data-theme="dark"] .chip { color: #4dc3ee; }
+.chip:hover, .chip.active-chip { background: var(--brand); color: #ffffff; }
+[data-theme="dark"] .chip.active-chip { color: #ffffff; }
+
+.month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.month-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; transition: background .35s ease; }
+.month-card h3 { color: var(--brand-dark); border-bottom: 2px solid var(--brand); padding-bottom: 8px; margin-bottom: 14px; }
+[data-theme="dark"] .month-card h3 { color: #4dc3ee; }
+.event-list { list-style: none; }
+.event-list li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.event-list li:last-child { border-bottom: none; }
+.event-date { font-weight: 700; min-width: 62px; color: var(--text-muted); font-size: .85rem; }
+.event-badge { padding: 3px 12px; border-radius: 999px; font-size: .86rem; font-weight: 600; color: #ffffff; }
+.event-badge.dark-text { color: #1e2124; }
+.event-hidden { display: none; }
+.legend-note { font-size: .9rem; color: var(--text-muted); margin-top: 24px; }
+
+/* ---------- Prose ---------- */
+.prose h2 { color: var(--brand-dark); margin: 34px 0 10px; font-size: 1.35rem; }
+.prose h3 { color: var(--brand); margin: 24px 0 8px; font-size: 1.1rem; }
+[data-theme="dark"] .prose h2 { color: #4dc3ee; }
+.prose p, .prose ul { margin-bottom: 14px; }
+.prose ul { padding-left: 22px; }
