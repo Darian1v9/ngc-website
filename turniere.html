@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turnierkalender 2026 – NEW GOLF CLUB Neu-Ulm</title>
+<meta name="description" content="Alle Turniere 2026 im NEW GOLF CLUB Neu-Ulm: Gentlemen's Cup, Early Morning, Play &amp; Stay, Happy 9, My Fairway Lady, Clubmeisterschaften und mehr – von April bis Oktober.">
+<link rel="canonical" href="https://www.newgolfclub.de/turniere.html">
+<meta property="og:title" content="Turnierkalender 2026 – NEW GOLF CLUB Neu-Ulm">
+<meta property="og:description" content="Alle Turniere und Events 2026 auf einen Blick.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="de_DE">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/main.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-wrap">
+    <a class="brand" href="index.html">
+      <img src="https://www.newgolfclub.de/wp-content/uploads/2018/04/mf_logos_alle_2017-02-300x238.png" alt="NEW GOLF CLUB Neu-Ulm Logo">
+      <span class="brand-text"><strong>NEW GOLF CLUB</strong><span data-en="Golf for everyone · Neu-Ulm">Golf für alle · Neu-Ulm</span></span>
+    </a>
+    <div class="toggles">
+      <button class="toggle-btn" id="langToggle" aria-label="Switch language">EN</button>
+      <button class="toggle-btn" id="themeToggle" aria-label="Farbmodus wechseln">🌙</button>
+      <button class="nav-toggle" aria-label="Menü öffnen">☰</button>
+    </div>
+    <nav class="main-nav" id="nav" aria-label="Hauptnavigation">
+      <ul>
+        <li><a href="index.html" data-en="Home">Start</a></li>
+        <li><a href="club.html" data-en="Club &amp; Course">Club &amp; Platz</a></li>
+        <li><a href="kurse.html" data-en="Lessons &amp; Training">Kurse &amp; Training</a></li>
+        <li><a href="turniere.html" class="active" data-en="Tournaments">Turniere</a></li>
+        <li><a href="lounge.html" data-en="Indoor Lounge">Indoor-Lounge</a></li>
+        <li><a href="cafe.html">Café</a></li>
+        <li><a href="kontakt.html" data-en="Contact">Kontakt</a></li>
+        <li><a class="cta-nav" href="https://www.pccaddie.net/clubs/0498946/app.php?cat=tt_timetable_course" target="_blank" rel="noopener" data-en="Book tee time">Startzeit buchen</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="hero hero-small">
+  <div class="hero-inner">
+    <span class="kicker" data-en="Season 2026">Saison 2026</span>
+    <h1 data-en="Tournament calendar 2026">Turnierkalender 2026</h1>
+    <p class="lead" data-en="From Swing into Spring to the Oktoberfest tournament: all tournaments, events and course maintenance dates at a glance.">Von Swing into Spring bis zum Oktoberfest-Turnier: alle Turniere, Events und Platzpflege-Termine auf einen Blick.</p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="filter-chips reveal" id="filterChips">
+      <button class="chip active-chip" data-filter="alle" data-en="All">Alle</button>
+      <button class="chip" data-filter="turnier" data-en="Tournaments &amp; events">Turniere &amp; Events</button>
+      <button class="chip" data-filter="pflege" data-en="Course maintenance">Platzpflege</button>
+      <button class="chip" data-filter="feiertag" data-en="Public holidays">Feiertage</button>
+    </div>
+    <div class="month-grid" id="calendar"></div>
+    <p class="legend-note" data-en="All dates subject to change – current information at the office (0731 70533315) or via the events on the booking system. Registration for tournaments via PC Caddie or at the office.">Alle Termine ohne Gewähr – aktuelle Infos im Office (0731 70533315) oder über das Buchungssystem. Anmeldung zu Turnieren über PC Caddie oder im Office.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="cta-band reveal">
+      <div>
+        <h2 data-en="Want to play a tournament?">Lust, ein Turnier mitzuspielen?</h2>
+        <p data-en="Guests are welcome at many events – just ask at the office.">Bei vielen Events sind Gäste willkommen – frag einfach im Office nach.</p>
+      </div>
+      <div>
+        <a class="btn btn-gold" href="https://www.pccaddie.net/clubs/0498946/app.php?cat=tt_timetable_course" target="_blank" rel="noopener" data-en="To the booking system">Zum Buchungssystem</a>
+        <a class="btn btn-ghost" href="tel:+4973170533315">0731 70533315</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  /* Turnierdaten 2026 – Quelle: offizieller Turnierkalender */
+  var SERIES = {
+    'Homeoffice':          { c: '#e02020', t: 'turnier' },
+    "Gentlemen's Cup":     { c: '#17bccf', t: 'turnier' },
+    'Early Morning':       { c: '#f07818', t: 'turnier' },
+    'Play & Stay':         { c: '#2196f3', t: 'turnier' },
+    'Happy 9':             { c: '#7ac943', t: 'turnier', dark: true },
+    'My Fairway Lady':     { c: '#e85fd0', t: 'turnier' },
+    'Tiger & Rabbit':      { c: '#f0dc28', t: 'turnier', dark: true },
+    'Legends Cup':         { c: '#8a5a2b', t: 'turnier' },
+    'NGC-Liga':            { c: '#063243', t: 'turnier' },
+    'Highlight':           { c: '#7ac943', t: 'turnier', dark: true },
+    'Turnierwoche':        { c: '#f2247c', t: 'turnier' },
+    'Clubmeisterschaften': { c: '#f2247c', t: 'turnier' },
+    'Aerifizieren':        { c: '#9aa7ae', t: 'pflege', dark: true },
+    'Feiertag':            { c: '#d8b7bb', t: 'feiertag', dark: true }
+  };
+
+  var MONTHS = [
+    { de: 'April', en: 'April', events: [
+      { d: '03.', name: 'Karfreitag', en: 'Good Friday', s: 'Feiertag' },
+      { d: '05.', name: 'Ostersonntag', en: 'Easter Sunday', s: 'Feiertag' },
+      { d: '06.', name: 'Ostermontag', en: 'Easter Monday', s: 'Feiertag' },
+      { d: '19.', name: 'Swing into Spring', s: 'Highlight' },
+      { d: '24.', name: 'NGC 1 / NGC 2 (Liga)', en: 'NGC 1 / NGC 2 (league)', s: 'NGC-Liga' }
+    ]},
+    { de: 'Mai', en: 'May', events: [
+      { d: '01.', name: 'Trachten Gaudi', s: 'Highlight' },
+      { d: '05./12./19./26.', name: 'Homeoffice (dienstags)', en: 'Homeoffice (Tuesdays)', s: 'Homeoffice' },
+      { d: '07.', name: "Gentlemen's Cup", s: "Gentlemen's Cup" },
+      { d: '10.', name: 'Early Morning', s: 'Early Morning' },
+      { d: '14.', name: 'Christi Himmelfahrt', en: 'Ascension Day', s: 'Feiertag' },
+      { d: '16.', name: 'Play & Stay', s: 'Play & Stay' },
+      { d: '22.', name: 'Happy 9', s: 'Happy 9' },
+      { d: '24./25.', name: 'Pfingsten', en: 'Whitsun', s: 'Feiertag' },
+      { d: '28.', name: 'My Fairway Lady', s: 'My Fairway Lady' },
+      { d: '29.', name: 'NGC 1 (Liga)', en: 'NGC 1 (league)', s: 'NGC-Liga' },
+      { d: '30.', name: 'Tiger & Rabbit', s: 'Tiger & Rabbit' }
+    ]},
+    { de: 'Juni', en: 'June', events: [
+      { d: '01.–03.', name: 'Aerifizieren (Platzpflege)', en: 'Aeration (maintenance)', s: 'Aerifizieren' },
+      { d: '04.', name: 'Fronleichnam', en: 'Corpus Christi', s: 'Feiertag' },
+      { d: '13.', name: 'Play & Stay', s: 'Play & Stay' },
+      { d: '17.', name: 'Legends Cup', s: 'Legends Cup' },
+      { d: '18.', name: "Gentlemen's Cup", s: "Gentlemen's Cup" },
+      { d: '20.', name: 'Midsummer', s: 'Highlight' },
+      { d: '23./30.', name: 'Homeoffice (dienstags)', en: 'Homeoffice (Tuesdays)', s: 'Homeoffice' },
+      { d: '25.', name: 'My Fairway Lady', s: 'My Fairway Lady' },
+      { d: '27.', name: 'Tiger & Rabbit', s: 'Tiger & Rabbit' },
+      { d: '28.', name: 'Early Morning', s: 'Early Morning' }
+    ]},
+    { de: 'Juli', en: 'July', events: [
+      { d: '03.', name: 'Happy 9', s: 'Happy 9' },
+      { d: '07./14.', name: 'Homeoffice (dienstags)', en: 'Homeoffice (Tuesdays)', s: 'Homeoffice' },
+      { d: '09.', name: "Gentlemen's Cup", s: "Gentlemen's Cup" },
+      { d: '10.', name: 'NGC 1 / NGC 2 (Liga)', en: 'NGC 1 / NGC 2 (league)', s: 'NGC-Liga' },
+      { d: '12.', name: 'Early Morning', s: 'Early Morning' },
+      { d: '16.', name: 'My Fairway Lady', s: 'My Fairway Lady' },
+      { d: '18.', name: 'Play & Stay', s: 'Play & Stay' },
+      { d: '24.–31.', name: 'Turnierwoche', en: 'Tournament week', s: 'Turnierwoche' }
+    ]},
+    { de: 'August', en: 'August', events: [
+      { d: '01./02.', name: 'Clubmeisterschaften', en: 'Club championships', s: 'Clubmeisterschaften' },
+      { d: '03.–05.', name: 'Aerifizieren (Platzpflege)', en: 'Aeration (maintenance)', s: 'Aerifizieren' },
+      { d: '07.', name: 'NGC 2 (Liga)', en: 'NGC 2 (league)', s: 'NGC-Liga' },
+      { d: '11./25.', name: 'Homeoffice (dienstags)', en: 'Homeoffice (Tuesdays)', s: 'Homeoffice' },
+      { d: '13.', name: "Gentlemen's Cup", s: "Gentlemen's Cup" },
+      { d: '15.', name: 'Play & Stay', s: 'Play & Stay' },
+      { d: '19.', name: 'Legends Cup', s: 'Legends Cup' },
+      { d: '21.', name: 'Happy 9', s: 'Happy 9' },
+      { d: '23.', name: 'Early Morning', s: 'Early Morning' },
+      { d: '27.', name: 'My Fairway Lady', s: 'My Fairway Lady' },
+      { d: '29.', name: 'Tiger & Rabbit', s: 'Tiger & Rabbit' }
+    ]},
+    { de: 'September', en: 'September', events: [
+      { d: '01./08./15./22./29.', name: 'Homeoffice (dienstags)', en: 'Homeoffice (Tuesdays)', s: 'Homeoffice' },
+      { d: '10.', name: "Gentlemen's Cup", s: "Gentlemen's Cup" },
+      { d: '12.', name: 'Play & Stay', s: 'Play & Stay' },
+      { d: '18.', name: 'Happy 9', s: 'Happy 9' },
+      { d: '20.', name: 'Early Morning', s: 'Early Morning' },
+      { d: '24.', name: 'My Fairway Lady', s: 'My Fairway Lady' },
+      { d: '26.', name: 'Tiger & Rabbit', s: 'Tiger & Rabbit' },
+      { d: '30.', name: 'Legends Cup', s: 'Legends Cup' }
+    ]},
+    { de: 'Oktober', en: 'October', events: [
+      { d: '03.', name: 'Oktoberfest-Turnier', en: 'Oktoberfest tournament', s: 'Highlight' },
+      { d: '04.', name: 'Early Morning', s: 'Early Morning' },
+      { d: '05.–07.', name: 'Aerifizieren (Platzpflege)', en: 'Aeration (maintenance)', s: 'Aerifizieren' },
+      { d: '31.', name: 'Reformationstag', en: 'Reformation Day', s: 'Feiertag' }
+    ]}
+  ];
+
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  function render() {
+    var html = '';
+    MONTHS.forEach(function (m, i) {
+      html += '<div class="month-card reveal' + (i % 3 === 1 ? ' d1' : i % 3 === 2 ? ' d2' : '') + '">';
+      html += '<h3 data-en="' + m.en + ' 2026">' + m.de + ' 2026</h3><ul class="event-list">';
+      m.events.forEach(function (ev) {
+        var se = SERIES[ev.s];
+        var nameEn = ev.en || ev.name;
+        html += '<li data-type="' + se.t + '">'
+          + '<span class="event-date">' + ev.d + '</span>'
+          + '<span class="event-badge' + (se.dark ? ' dark-text' : '') + '" style="background:' + se.c + '" data-en="' + esc(nameEn) + '">' + esc(ev.name) + '</span>'
+          + '</li>';
+      });
+      html += '</ul></div>';
+    });
+    document.getElementById('calendar').innerHTML = html;
+  }
+
+  function initFilters() {
+    var chips = document.querySelectorAll('#filterChips .chip');
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        chips.forEach(function (c) { c.classList.remove('active-chip'); });
+        chip.classList.add('active-chip');
+        var f = chip.getAttribute('data-filter');
+        document.querySelectorAll('#calendar li').forEach(function (li) {
+          li.classList.toggle('event-hidden', f !== 'alle' && li.getAttribute('data-type') !== f);
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    render();
+    initFilters();
+    // Reveal-Animation für nachträglich erzeugte Karten
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('#calendar .reveal').forEach(function (el) { obs.observe(el); });
+    } else {
+      document.querySelectorAll('#calendar .reveal').forEach(function (el) { el.classList.add('visible'); });
+    }
+  });
+})();
+</script>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <h4>New Golf Club Neu-Ulm</h4>
+      <p>Kammer-Krummen-Straße 100<br>89233 Neu-Ulm<br>
+      <span data-en="Phone">Telefon</span>: <a href="tel:+4973170533315">+49 (0)731 70 53 33 15</a><br>
+      E-Mail: <a href="mailto:info@newgolfclub.de">info@newgolfclub.de</a></p>
+      <p style="margin-top:12px;" data-en="Office: Tue &amp; Thu 2–8 pm · Sun 10 am–5 pm&lt;br&gt;and on tournament days &amp; public holidays 10 am–5 pm">Office: Di &amp; Do 14–20 Uhr · So 10–17 Uhr<br>sowie an Turnier- &amp; Feiertagen 10–17 Uhr</p>
+      <div class="footer-logos">
+        <img src="https://www.newgolfclub.de/wp-content/uploads/2018/04/mf_logos_alle_2017-02-300x238.png" alt="NEW GOLF CLUB Logo" loading="lazy">
+        <img src="https://www.newgolfclub.de/wp-content/uploads/2018/04/mf_logos_alle_2017-01-300x238.png" alt="NEW GOLF LOUNGE Logo" loading="lazy">
+        <img src="https://www.newgolfclub.de/wp-content/uploads/2018/04/mf_logos_alle_2017-04-300x238.png" alt="NEW GOLF CAFÉ Logo" loading="lazy">
+      </div>
+    </div>
+    <div>
+      <h4 data-en="Pages">Seiten</h4>
+      <ul>
+        <li><a href="club.html" data-en="Club &amp; Course">Club &amp; Platz</a></li>
+        <li><a href="kurse.html" data-en="Lessons &amp; Training">Kurse &amp; Training</a></li>
+        <li><a href="turniere.html" data-en="Tournaments">Turniere</a></li>
+        <li><a href="lounge.html" data-en="Indoor Lounge">Indoor-Lounge</a></li>
+        <li><a href="cafe.html">Café</a></li>
+        <li><a href="kontakt.html" data-en="Contact &amp; Directions">Kontakt &amp; Anfahrt</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Service</h4>
+      <ul>
+        <li><a href="https://www.pccaddie.net/clubs/0498946/app.php?cat=tt_timetable_course" target="_blank" rel="noopener" data-en="Book tee time">Startzeit buchen</a></li>
+        <li><a href="https://www.facebook.com/newgolfclubneuulm/" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="https://www.instagram.com/newgolfclub_nu/" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="datenschutz.html" data-en="Privacy policy">Datenschutz</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" data-en="© 2026 NEW GOLF CLUB Neu-Ulm · All rights reserved">© 2026 NEW GOLF CLUB Neu-Ulm · Alle Rechte vorbehalten</div>
+</footer>
+
+</body>
+</html>
