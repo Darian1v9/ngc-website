@@ -46,16 +46,20 @@
     <span class="kicker" data-en="Season 2026">Saison 2026</span>
     <h1 data-en="Tournament calendar 2026">Turnierkalender 2026</h1>
     <p class="lead" data-en="From Swing into Spring to the Oktoberfest tournament: all tournaments, events and course maintenance dates at a glance.">Von Swing into Spring bis zum Oktoberfest-Turnier: alle Turniere, Events und Platzpflege-Termine auf einen Blick.</p>
+    <a class="btn btn-gold" href="https://www.pccaddie.net/clubs/0498946/app.php" target="_blank" rel="noopener" data-en="Register for a tournament">Zur Turnier-Anmeldung</a>
   </div>
 </div>
 
 <section>
   <div class="container">
-    <div class="filter-chips reveal" id="filterChips">
-      <button class="chip active-chip" data-filter="alle" data-en="All">Alle</button>
-      <button class="chip" data-filter="turnier" data-en="Tournaments &amp; events">Turniere &amp; Events</button>
-      <button class="chip" data-filter="pflege" data-en="Course maintenance">Platzpflege</button>
-      <button class="chip" data-filter="feiertag" data-en="Public holidays">Feiertage</button>
+    <div class="cal-toolbar reveal">
+      <div class="filter-chips" id="filterChips">
+        <button class="chip active-chip" data-filter="alle"><span data-en="All" data-de="Alle">Alle</span> <span class="cnt" data-count="alle"></span></button>
+        <button class="chip" data-filter="turnier"><span data-en="Tournaments &amp; events" data-de="Turniere &amp; Events">Turniere &amp; Events</span> <span class="cnt" data-count="turnier"></span></button>
+        <button class="chip" data-filter="pflege"><span data-en="Course maintenance" data-de="Platzpflege">Platzpflege</span> <span class="cnt" data-count="pflege"></span></button>
+        <button class="chip" data-filter="feiertag"><span data-en="Public holidays" data-de="Feiertage">Feiertage</span> <span class="cnt" data-count="feiertag"></span></button>
+      </div>
+      <p class="cal-count"><strong id="calCountNum"></strong> <span data-en="dates" data-de="Termine">Termine</span></p>
     </div>
     <div class="month-grid" id="calendar"></div>
     <p class="legend-note" data-en="All dates subject to change – current information at the office (0731 70533315) or via the events on the booking system. Registration for tournaments via PC Caddie or at the office.">Alle Termine ohne Gewähr – aktuelle Infos im Office (0731 70533315) oder über das Buchungssystem. Anmeldung zu Turnieren über PC Caddie oder im Office.</p>
@@ -171,24 +175,61 @@
     ]}
   ];
 
-  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  /* PC-Caddie-Portal des Clubs – Anmeldung / Turnieranmeldung */
+  var PCC = 'https://www.pccaddie.net/clubs/0498946/app.php';
+
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
 
   function render() {
     var html = '';
     MONTHS.forEach(function (m, i) {
       html += '<div class="month-card reveal' + (i % 3 === 1 ? ' d1' : i % 3 === 2 ? ' d2' : '') + '">';
-      html += '<h3 data-en="' + m.en + ' 2026">' + m.de + ' 2026</h3><ul class="event-list">';
+      html += '<div class="month-head">'
+        + '<h3 data-en="' + m.en + ' 2026" data-de="' + m.de + ' 2026">' + m.de + ' 2026</h3>'
+        + '<span class="m-count">' + m.events.length + ' <span data-en="dates" data-de="Termine">Termine</span></span>'
+        + '</div>';
+      html += '<ul class="event-list">';
       m.events.forEach(function (ev) {
         var se = SERIES[ev.s];
         var nameEn = ev.en || ev.name;
-        html += '<li data-type="' + se.t + '">'
+        var cta = se.t === 'turnier'
+          ? '<a class="event-cta" href="' + PCC + '" target="_blank" rel="noopener" data-en="Register" data-de="Anmelden">Anmelden</a>'
+          : '';
+        html += '<li data-type="' + se.t + '" style="border-left-color:' + se.c + '">'
           + '<span class="event-date">' + ev.d + '</span>'
-          + '<span class="event-badge' + (se.dark ? ' dark-text' : '') + '" style="background:' + se.c + '" data-en="' + esc(nameEn) + '">' + esc(ev.name) + '</span>'
+          + '<span class="event-badge' + (se.dark ? ' dark-text' : '') + '" style="background:' + se.c + '" data-en="' + esc(nameEn) + '" data-de="' + esc(ev.name) + '">' + esc(ev.name) + '</span>'
+          + cta
           + '</li>';
       });
       html += '</ul></div>';
     });
     document.getElementById('calendar').innerHTML = html;
+  }
+
+  function fillCounts() {
+    var counts = { alle: 0, turnier: 0, pflege: 0, feiertag: 0 };
+    MONTHS.forEach(function (m) {
+      m.events.forEach(function (ev) { var t = SERIES[ev.s].t; counts.alle++; counts[t]++; });
+    });
+    document.querySelectorAll('#filterChips .cnt').forEach(function (el) {
+      el.textContent = counts[el.getAttribute('data-count')];
+    });
+  }
+
+  function applyFilter(f) {
+    var shown = 0;
+    document.querySelectorAll('#calendar .month-card').forEach(function (card) {
+      var vis = 0;
+      card.querySelectorAll('li').forEach(function (li) {
+        var match = (f === 'alle' || li.getAttribute('data-type') === f);
+        li.classList.toggle('is-hidden', !match);
+        if (match) vis++;
+      });
+      card.classList.toggle('is-empty', vis === 0);
+      shown += vis;
+    });
+    var num = document.getElementById('calCountNum');
+    if (num) num.textContent = shown;
   }
 
   function initFilters() {
@@ -197,17 +238,27 @@
       chip.addEventListener('click', function () {
         chips.forEach(function (c) { c.classList.remove('active-chip'); });
         chip.classList.add('active-chip');
-        var f = chip.getAttribute('data-filter');
-        document.querySelectorAll('#calendar li').forEach(function (li) {
-          li.classList.toggle('event-hidden', f !== 'alle' && li.getAttribute('data-type') !== f);
-        });
+        applyFilter(chip.getAttribute('data-filter'));
       });
+    });
+  }
+
+  /* Kalender-Inhalte an die aktuell gewählte Sprache anpassen */
+  function translateNode(scope) {
+    if (!scope) return;
+    var lang = document.documentElement.getAttribute('lang') || 'de';
+    scope.querySelectorAll('[data-en]').forEach(function (el) {
+      if (!el.hasAttribute('data-de')) el.setAttribute('data-de', el.innerHTML);
+      el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-de');
     });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     render();
+    fillCounts();
+    translateNode(document.getElementById('calendar'));
     initFilters();
+    applyFilter('alle');
     // Reveal-Animation für nachträglich erzeugte Karten
     if ('IntersectionObserver' in window) {
       var obs = new IntersectionObserver(function (entries) {
