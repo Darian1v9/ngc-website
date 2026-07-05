@@ -109,5 +109,65 @@
         if (y < 700) hero.style.transform = 'translateY(' + y * 0.18 + 'px)';
       }, { passive: true });
     }
+
+    /* ---------- Special Effects ---------- */
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scroll-Fortschrittsbalken (oben)
+    var progress = document.createElement('div');
+    progress.id = 'scrollProgress';
+    document.body.appendChild(progress);
+
+    var header = document.querySelector('.site-header');
+    var bands = [].slice.call(document.querySelectorAll('.photo-band'));
+
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var docH = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (docH > 0 ? (y / docH) * 100 : 0) + '%';
+      if (header) header.classList.toggle('shrink', y > 40);
+      if (!reduceMotion) {
+        var vh = window.innerHeight;
+        bands.forEach(function (b) {
+          var r = b.getBoundingClientRect();
+          if (r.bottom > 0 && r.top < vh) {
+            var offset = ((r.top + r.height / 2) - vh / 2) / vh; // -1 .. 1
+            b.style.setProperty('--par', (offset * -14).toFixed(1) + 'px');
+          }
+        });
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+
+    // Hochzählende Kennzahlen
+    var nums = document.querySelectorAll('.stat-num');
+    if (nums.length) {
+      var runCount = function (el) {
+        var target = parseFloat(el.getAttribute('data-target')) || 0;
+        var suffix = el.getAttribute('data-suffix') || '';
+        if (reduceMotion) { el.innerHTML = target.toLocaleString('de-DE') + suffix; return; }
+        var dur = 1400, start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var p = Math.min((ts - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.innerHTML = Math.round(target * eased).toLocaleString('de-DE') + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      };
+      if ('IntersectionObserver' in window) {
+        var nObs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { runCount(e.target); nObs.unobserve(e.target); }
+          });
+        }, { threshold: 0.5 });
+        nums.forEach(function (el) { nObs.observe(el); });
+      } else {
+        nums.forEach(runCount);
+      }
+    }
   });
 })();
