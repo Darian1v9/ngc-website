@@ -93,6 +93,10 @@ a:hover { text-decoration: underline; }
 .main-nav a.cta-nav:hover { background: #ffb824; }
 
 .toggles { display: flex; gap: 8px; align-items: center; }
+/* Schalter (Sprache + Dark/Light) an den oberen rechten Rand */
+.brand { margin-right: auto; }
+.main-nav { order: 2; }
+.toggles { order: 3; }
 .toggle-btn {
   background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3);
   color: #ffffff; border-radius: 999px; padding: 7px 13px; font-size: .9rem;
