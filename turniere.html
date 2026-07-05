@@ -55,12 +55,14 @@
     <div class="cal-toolbar reveal">
       <div class="filter-chips" id="filterChips">
         <button class="chip active-chip" data-filter="alle"><span data-en="All" data-de="Alle">Alle</span> <span class="cnt" data-count="alle"></span></button>
-        <button class="chip" data-filter="turnier"><span data-en="Tournaments &amp; events" data-de="Turniere &amp; Events">Turniere &amp; Events</span> <span class="cnt" data-count="turnier"></span></button>
+        <button class="chip" data-filter="turnier"><span data-en="Tournaments" data-de="Turniere">Turniere</span> <span class="cnt" data-count="turnier"></span></button>
+        <button class="chip" data-filter="highlight"><span data-en="Highlights &amp; events" data-de="Highlights &amp; Events">Highlights &amp; Events</span> <span class="cnt" data-count="highlight"></span></button>
         <button class="chip" data-filter="pflege"><span data-en="Course maintenance" data-de="Platzpflege">Platzpflege</span> <span class="cnt" data-count="pflege"></span></button>
         <button class="chip" data-filter="feiertag"><span data-en="Public holidays" data-de="Feiertage">Feiertage</span> <span class="cnt" data-count="feiertag"></span></button>
       </div>
       <p class="cal-count"><strong id="calCountNum"></strong> <span data-en="dates" data-de="Termine">Termine</span></p>
     </div>
+    <div class="cal-legend" id="calLegend" aria-label="Farb-Legende der Terminkategorien"></div>
     <div class="month-grid" id="calendar"></div>
     <p class="legend-note" data-en="All dates subject to change – current information at the office (0731 70533315) or via the events on the booking system. Registration for tournaments via PC Caddie or at the office.">Alle Termine ohne Gewähr – aktuelle Infos im Office (0731 70533315) oder über das Buchungssystem. Anmeldung zu Turnieren über PC Caddie oder im Office.</p>
   </div>
@@ -83,22 +85,31 @@
 
 <script>
 (function () {
-  /* Turnierdaten 2026 – Quelle: offizieller Turnierkalender */
+  /* Kategorien (Cluster) mit Farbe für Badge + Legende */
+  var CATS = {
+    turnier:   { de: 'Turniere',            en: 'Tournaments',         c: '#0089c7' },
+    highlight: { de: 'Highlights & Events', en: 'Highlights & events', c: '#ef8a1f', dark: true },
+    pflege:    { de: 'Platzpflege',         en: 'Course maintenance',  c: '#6b7d86' },
+    feiertag:  { de: 'Feiertage',           en: 'Public holidays',     c: '#c9bfa8', dark: true }
+  };
+  var CAT_ORDER = ['turnier', 'highlight', 'pflege', 'feiertag'];
+
+  /* Turnierserie -> Kategorie (Quelle: offizieller Turnierkalender 2026) */
   var SERIES = {
-    'Homeoffice':          { c: '#e02020', t: 'turnier' },
-    "Gentlemen's Cup":     { c: '#17bccf', t: 'turnier' },
-    'Early Morning':       { c: '#f07818', t: 'turnier' },
-    'Play & Stay':         { c: '#2196f3', t: 'turnier' },
-    'Happy 9':             { c: '#7ac943', t: 'turnier', dark: true },
-    'My Fairway Lady':     { c: '#e85fd0', t: 'turnier' },
-    'Tiger & Rabbit':      { c: '#f0dc28', t: 'turnier', dark: true },
-    'Legends Cup':         { c: '#8a5a2b', t: 'turnier' },
-    'NGC-Liga':            { c: '#063243', t: 'turnier' },
-    'Highlight':           { c: '#7ac943', t: 'turnier', dark: true },
-    'Turnierwoche':        { c: '#f2247c', t: 'turnier' },
-    'Clubmeisterschaften': { c: '#f2247c', t: 'turnier' },
-    'Aerifizieren':        { c: '#9aa7ae', t: 'pflege', dark: true },
-    'Feiertag':            { c: '#d8b7bb', t: 'feiertag', dark: true }
+    'Homeoffice':          'turnier',
+    "Gentlemen's Cup":     'turnier',
+    'Early Morning':       'turnier',
+    'Play & Stay':         'turnier',
+    'Happy 9':             'turnier',
+    'My Fairway Lady':     'turnier',
+    'Tiger & Rabbit':      'turnier',
+    'Legends Cup':         'turnier',
+    'NGC-Liga':            'turnier',
+    'Highlight':           'highlight',
+    'Turnierwoche':        'highlight',
+    'Clubmeisterschaften': 'highlight',
+    'Aerifizieren':        'pflege',
+    'Feiertag':            'feiertag'
   };
 
   var MONTHS = [
@@ -179,6 +190,41 @@
   var PCC = 'https://www.pccaddie.net/clubs/0498946/app.php';
 
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function dayNum(d) { var m = d.match(/\d+/); return m ? parseInt(m[0], 10) : 0; }
+
+  /* Homeoffice auf einzelne Tage aufsplitten + Monate chronologisch sortieren */
+  function prepData() {
+    MONTHS.forEach(function (m) {
+      var out = [];
+      m.events.forEach(function (ev) {
+        if (ev.s === 'Homeoffice' && ev.d.indexOf('/') > -1) {
+          ev.d.split('/').forEach(function (p) {
+            p = p.trim();
+            if (p) out.push({ d: p, name: 'Homeoffice', en: 'Homeoffice', s: 'Homeoffice' });
+          });
+        } else {
+          out.push(ev);
+        }
+      });
+      out.sort(function (a, b) { return dayNum(a.d) - dayNum(b.d); });
+      m.events = out;
+    });
+  }
+
+  /* Farb-Legende der Kategorien aufbauen */
+  function buildLegend() {
+    var el = document.getElementById('calLegend');
+    if (!el) return;
+    var html = '';
+    CAT_ORDER.forEach(function (k) {
+      var cat = CATS[k];
+      html += '<span class="legend-item">'
+        + '<span class="legend-dot" style="background:' + cat.c + '"></span>'
+        + '<span data-en="' + cat.en + '" data-de="' + cat.de + '">' + cat.de + '</span>'
+        + '</span>';
+    });
+    el.innerHTML = html;
+  }
 
   function render() {
     var html = '';
@@ -190,14 +236,16 @@
         + '</div>';
       html += '<ul class="event-list">';
       m.events.forEach(function (ev) {
-        var se = SERIES[ev.s];
+        var key = SERIES[ev.s];
+        var cat = CATS[key];
         var nameEn = ev.en || ev.name;
-        var cta = se.t === 'turnier'
+        var canRegister = (key === 'turnier' || key === 'highlight');
+        var cta = canRegister
           ? '<a class="event-cta" href="' + PCC + '" target="_blank" rel="noopener" data-en="Register" data-de="Anmelden">Anmelden</a>'
           : '';
-        html += '<li data-type="' + se.t + '" style="border-left-color:' + se.c + '">'
+        html += '<li data-type="' + key + '" style="border-left-color:' + cat.c + '">'
           + '<span class="event-date">' + ev.d + '</span>'
-          + '<span class="event-badge' + (se.dark ? ' dark-text' : '') + '" style="background:' + se.c + '" data-en="' + esc(nameEn) + '" data-de="' + esc(ev.name) + '">' + esc(ev.name) + '</span>'
+          + '<span class="event-badge' + (cat.dark ? ' dark-text' : '') + '" style="background:' + cat.c + '" data-en="' + esc(nameEn) + '" data-de="' + esc(ev.name) + '">' + esc(ev.name) + '</span>'
           + cta
           + '</li>';
       });
@@ -207,9 +255,9 @@
   }
 
   function fillCounts() {
-    var counts = { alle: 0, turnier: 0, pflege: 0, feiertag: 0 };
+    var counts = { alle: 0, turnier: 0, highlight: 0, pflege: 0, feiertag: 0 };
     MONTHS.forEach(function (m) {
-      m.events.forEach(function (ev) { var t = SERIES[ev.s].t; counts.alle++; counts[t]++; });
+      m.events.forEach(function (ev) { var k = SERIES[ev.s]; counts.alle++; counts[k]++; });
     });
     document.querySelectorAll('#filterChips .cnt').forEach(function (el) {
       el.textContent = counts[el.getAttribute('data-count')];
@@ -254,9 +302,12 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    prepData();
     render();
+    buildLegend();
     fillCounts();
     translateNode(document.getElementById('calendar'));
+    translateNode(document.getElementById('calLegend'));
     initFilters();
     applyFilter('alle');
     // Reveal-Animation für nachträglich erzeugte Karten
